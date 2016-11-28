@@ -5,6 +5,7 @@
 
 struct cmdLine parse_cmd(char *cmdL);
 struct cmdArr parse_line(char *cmdL);
+void run_cmd(struct cmdLine cmdL);
 
 struct cmdLine{
   char *cmd[512];
@@ -26,9 +27,13 @@ int main(){
   struct cmdArr lines = parse_line(input);
 
   int i = 0;
-  while(&lines.arr[i].cmd[0]){
-    fork();
-    execvp(lines.arr[i].cmd[0],lines.arr[i].cmd);
+  for(i;lines.arr[i].cmd[0];i++){
+    int f = fork();
+    wait();
+    printf("%d: %d\n",i,f);
+    if (f==0){
+      execvp(lines.arr[i].cmd[0],lines.arr[i].cmd);
+    }
   }
   return 0;
 }
@@ -57,4 +62,9 @@ struct cmdLine parse_cmd(char *cmdL){
    }
    single.cmd[i] = NULL;
   return single;
+}
+
+void run_cmd(struct cmdLine cmdL){
+  char *redir;
+  
 }
