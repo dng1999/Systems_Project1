@@ -4,10 +4,12 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
 
 void execRedirO(char **cmd){ // cmd > file
   printf("execRedirO\n");
-  char **command;
+  char **command = (char **)calloc(10,10);
   char *file;
   
   int ci = 0;
@@ -26,7 +28,7 @@ void execRedirO(char **cmd){ // cmd > file
     }
     i++;
   }
-  int filed = open(file, "O_RDWR");
+  int filed = open(file, O_RDWR);
   dup2(filed,STDOUT_FILENO);
   close(filed);
   execvp(command[0],command);
@@ -53,7 +55,7 @@ void execRedirI(char **cmd){ // cmd < file
     }
     i++;
   }
-  int filed = open(file, "O_RDONLY");
+  int filed = open(file, O_RDONLY);
   dup2(filed,STDIN_FILENO);
   close(filed);
   execvp(command[0],command);
@@ -73,8 +75,9 @@ void execCommand(char **cmd){
   }
   else {
     int f = fork();
-    char *special;
+    char *special = "null";
     if (f==0){
+      printf("forked\n");
       int i = 0;
       while (cmd[i]){
 	if (strcmp(cmd[i],">") == 0){
@@ -89,6 +92,7 @@ void execCommand(char **cmd){
 	i++;
       }
       
+      printf("running specials\n");
       if (strcmp(special,">") == 0){
 	execRedirO(cmd);
       }
@@ -98,11 +102,13 @@ void execCommand(char **cmd){
       else if (strcmp(special,"|") == 0){
 	execPipe(cmd);
       }
-      //put special commands under here
-      printf("running %s...\n",cmd[0]);
-      execvp(cmd[0],cmd);
+      else{
+	printf("running %s...\n",cmd[0]);
+	execvp(cmd[0],cmd);
+      }
     }
     else {
+      printf("waiting...\n");
       int status;
       wait(&status);
     }
