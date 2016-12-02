@@ -1,2 +1,7 @@
-# Systems_Project1
-Writing a shell in C.
+# C Shell
+by Dorothy Ng
+
+Features:
+Attempted:
+Bugs:
+Files & Function Headers:
