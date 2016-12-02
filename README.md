@@ -1,10 +1,10 @@
 # C Shell
 by Dorothy Ng
 
-##Features:
+###Features:
 
-##Attempted:
+###Attempted:
 
-##Bugs:
+###Bugs:
 
-##Files & Function Headers:
+###Files & Function Headers:
