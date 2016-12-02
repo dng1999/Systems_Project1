@@ -6,14 +6,22 @@
 
 void execCommand(char **cmd){
   printf("execCommand\n");
-  int f = fork();
-  if (f==0){
-    printf("running %s...\n",cmd[0]);
-    execvp(cmd[0],cmd);
+  if (strcmp(cmd[0],"exit") == 0){
+    exit(0);
+  }
+  else if (strcmp(cmd[0],"cd") == 0){
+    chdir(cmd[1]);
   }
   else {
-    int status;
-    wait(&status);
+    int f = fork();
+    if (f==0){
+      printf("running %s...\n",cmd[0]);
+      execvp(cmd[0],cmd);
+    }
+    else {
+      int status;
+      wait(&status);
+    }
   }
 }
 
