@@ -31,9 +31,32 @@ void execRedirO(char **cmd){ // cmd > file
   close(filed);
   execvp(command[0],command);
 }
-void execRedirI(char **cmd){
+
+void execRedirI(char **cmd){ // cmd < file
   printf("execRedirI\n");
+  char **command;
+  char *file;
   
+  int ci = 0;
+  int i = 0;
+  int signPassed = 0;
+  while(cmd[i]){
+    if (!signPassed){
+      command[ci] = cmd[i];
+      ci++;
+    }
+    else if (strcmp(cmd[i],"<") == 0){
+      signPassed = 1;
+    }
+    else {
+      file = cmd[i];
+    }
+    i++;
+  }
+  int filed = open(file, "O_RDONLY");
+  dup2(filed,STDIN_FILENO);
+  close(filed);
+  execvp(command[0],command);
 }
 
 void execPipe(char **cmd){
