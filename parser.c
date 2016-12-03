@@ -5,8 +5,6 @@
 #include <errno.h>
 
 char **parseCommand (char *cmd){
-  printf("parseCommand\n");
-  
   char **single = (char **)calloc(10,10);
 
   int i = 0;
@@ -25,7 +23,6 @@ char **parseCommand (char *cmd){
 }
 
 char ***parseInput (char *input){
-  printf("parseInput\n");
   char ***multi = (char ***)calloc(100,100);
   
   int i = 0;

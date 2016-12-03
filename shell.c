@@ -9,9 +9,11 @@
 
 int main(){
   char input[512];
-
+  char cwd[512];
+  
   while (1){
-    printf("$ ");
+    getcwd(cwd,sizeof(cwd));
+    printf("%s$ ",cwd);
     fgets(input, sizeof(input), stdin);
     
     int i = 0;
