@@ -13,6 +13,7 @@ by Dorothy Ng
 	Putting multiple ;'s consecutively will cause a segmentation fault
 	Same for >,< and |
 	> redirection might work on certain computers (I was not able to test < or |)
+	Sometimes > works but writes a different file than specified
 	Single spaces only
 
 ###Files & Function Headers:
