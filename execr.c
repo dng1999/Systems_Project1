@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
+#include "execr.h"
+
 void execRedirO(char **cmd){ // cmd > file
   printf("execRedirO\n");
   char **command = (char **)calloc(10,10);
@@ -28,7 +30,7 @@ void execRedirO(char **cmd){ // cmd > file
     }
     i++;
   }
-  int filed = open(file, O_RDWR);
+  int filed = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
   dup2(filed,STDOUT_FILENO);
   close(filed);
   execvp(command[0],command);
@@ -55,7 +57,7 @@ void execRedirI(char **cmd){ // cmd < file
     }
     i++;
   }
-  int filed = open(file, O_RDONLY);
+  int filed = open(file, O_RDONLY, 0644);
   dup2(filed,STDIN_FILENO);
   close(filed);
   execvp(command[0],command);
@@ -63,6 +65,44 @@ void execRedirI(char **cmd){ // cmd < file
 
 void execPipe(char **cmd){
   printf("execPipe\n");
+  char **command1;
+  char **command2;
+
+  int ci = 0;
+  int fi = 0;
+  int i = 0;
+  int signPassed = 0;
+  while(cmd[i]){
+    if (!signPassed){
+      command1[ci] = cmd[i];
+      ci++;
+    }
+    else if (strcmp(cmd[i],"|") == 0){
+      signPassed = 1;
+    }
+    else {
+      command2[fi] = cmd[i];
+      fi++;
+    }
+    i++;
+  }
+  int out = dup(STDOUT_FILENO);
+  int in = dup(STDIN_FILENO);
+  int fd[2];
+  pipe(fd);
+  int f = fork();
+  int status;
+  if (f == 0){
+    dup2(fd[0],STDOUT_FILENO);
+    close(fd[0]);
+    execvp(command1[0],command1);
+  }
+  else{
+    wait(&status);
+    dup2(fd[1],STDIN_FILENO);
+    close(fd[1]);
+    execvp(command2[2],command2);
+  }
 }
 
 void execCommand(char **cmd){
